@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizzler/question.dart';
 
 void main() {
   runApp(const QuizPage());
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey.shade900,
-        body: SafeArea(
+        body: const SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.0),
             child: QuizPage(),
@@ -32,10 +33,29 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  List<Widget> scores = [
-    Icon(Icons.check, color: Colors.green),
-    Icon(Icons.close, color: Colors.red),
+  List<Widget> scores = [];
+  List<Question> questions = [
+    Question(questionText: '지구는 둥글다', questionAnswer: true),
+    Question(questionText: '주식은 어렵다', questionAnswer: true),
+    Question(questionText: '코딩은 쉽다', questionAnswer: false)
   ];
+
+  int questionNumber = 0;
+
+  void onPressButton(bool answer) {
+    setState(() {
+      if (questions[questionNumber].questionAnswer == answer) {
+        scores.add(const Icon(Icons.check, color: Colors.green));
+      } else {
+        scores.add(const Icon(Icons.close, color: Colors.red));
+      }
+
+      if (questionNumber >= -questions.length - 1) {
+        return;
+      }
+      questionNumber++;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,27 +68,35 @@ class _QuizPageState extends State<QuizPage> {
           Expanded(
             flex: 5,
             child: Center(
-              child: Text('test '),
+              child: Text(
+                questions[questionNumber].questionText,
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 40),
+              ),
             ),
           ),
           Expanded(
             flex: 1,
             child: ElevatedButton(
-              child: Text('True', textDirection: TextDirection.ltr),
-              onPressed: () {},
+              child: const Text('True', textDirection: TextDirection.ltr),
+              onPressed: () {
+                onPressButton(true);
+              },
             ),
           ),
           Expanded(
             flex: 1,
             child: ElevatedButton(
-              child: Text('false', textDirection: TextDirection.ltr),
-              onPressed: () {},
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text('False', textDirection: TextDirection.ltr),
+              onPressed: () {
+                onPressButton(false);
+              },
             ),
           ),
-          // Row(
-          //   children: scores,
-          // )
+          Row(
+            children: scores,
+          )
         ],
       ),
     );
