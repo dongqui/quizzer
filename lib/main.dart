@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quizzler/question.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 void main() {
-  runApp(const QuizPage());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -42,7 +43,7 @@ class _QuizPageState extends State<QuizPage> {
 
   int questionNumber = 0;
 
-  void onPressButton(bool answer) {
+  void onPressButton(bool answer, BuildContext context) {
     setState(() {
       if (questions[questionNumber].questionAnswer == answer) {
         scores.add(const Icon(Icons.check, color: Colors.green));
@@ -50,7 +51,8 @@ class _QuizPageState extends State<QuizPage> {
         scores.add(const Icon(Icons.close, color: Colors.red));
       }
 
-      if (questionNumber >= -questions.length - 1) {
+      if (questionNumber >= questions.length - 1) {
+        Alert(context: context, title: "문제 종료", desc: "문제 끝").show();
         return;
       }
       questionNumber++;
@@ -80,7 +82,7 @@ class _QuizPageState extends State<QuizPage> {
             child: ElevatedButton(
               child: const Text('True', textDirection: TextDirection.ltr),
               onPressed: () {
-                onPressButton(true);
+                onPressButton(true, context);
               },
             ),
           ),
@@ -90,7 +92,7 @@ class _QuizPageState extends State<QuizPage> {
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               child: const Text('False', textDirection: TextDirection.ltr),
               onPressed: () {
-                onPressButton(false);
+                onPressButton(false, context);
               },
             ),
           ),
